@@ -29,18 +29,19 @@ namespace Draughts {
         }
 
         private void GeneratePieces() {
-            bool isBlack = true;
-            for (int i = 0; i < Size; i++) {
+            GeneratePiecesInRows(0, 3, ColorTypes.Black, PieceTypes.Pawn, SideTypes.Top);
+            GeneratePiecesInRows(Size - 3, Size, ColorTypes.White, PieceTypes.Pawn, SideTypes.Bottom);
+        }
+
+        private void GeneratePiecesInRows(int start, int end, ColorTypes color, PieceTypes type, SideTypes side) {
+            for (int i = start; i < end; i++) {
                 Enumerable.Range(0, Size).Where(j => j % 2 != i % 2).Select(x => new Piece() {
                     Row = i,
                     Column = x,
-                    IsBlack = isBlack,
-                    Type = PieceTypes.Pawn
+                    Color = color,
+                    Type = type,
+                    Side = side
                 }).ToList().ForEach(Pieces.Add);
-                if (i == 2) {
-                    i = 4;
-                    isBlack = false;
-                }
             }
         }
 
@@ -69,11 +70,18 @@ namespace Draughts {
 
         private void Rectangle_Drop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(typeof(ImageSource))) {
-                Point cell = GetGridsCellAtCursorsPosition((Rectangle)sender);
-                Piece toRemove = Pieces.SingleOrDefault(p => { return p.Row == cellToRemove.X && p.Column == cellToRemove.Y; });
-                if (IfDropPossible(toRemove, cell)) {
-                    Pieces.Add(new Piece() { Row = (int)cell.X, Column = (int)cell.Y, IsBlack = toRemove.IsBlack, Type = PieceTypes.Pawn });
-                    Pieces.Remove(toRemove);
+                Point endCellCoor = GetGridsCellAtCursorsPosition((Rectangle)sender);
+                Piece startCell = Pieces.SingleOrDefault(p => { return p.Row == cellToRemove.X && p.Column == cellToRemove.Y; });
+                if (IfDropPossible(startCell, endCellCoor)) {
+                    if (IfOthersideCell(endCellCoor, startCell))
+                        startCell.Type = PieceTypes.Dame;
+                    Pieces.Add(new Piece() { Row = (int)endCellCoor.X, Column = (int)endCellCoor.Y, Color = startCell.Color, Type = startCell.Type, Side = startCell.Side });
+                    if(IfCapture(startCell, endCellCoor)) {
+                        Point pointToCapture = PointToCapture(startCell, endCellCoor);
+                        Piece pieceToCapture = Pieces.SingleOrDefault(p => { return p.Row == pointToCapture.X && p.Column == pointToCapture.Y; });
+                        Pieces.Remove(pieceToCapture);
+                    }                       
+                    Pieces.Remove(startCell);
                 }
             }
         }
@@ -83,18 +91,6 @@ namespace Draughts {
                 e.Effects = DragDropEffects.None;
             }
         }
-
-    //    private static T FindAnchestor<T>(DependencyObject current)
-    //where T : DependencyObject {
-    //        do {
-    //            if (current is T) {
-    //                return (T)current;
-    //            }
-    //            current = VisualTreeHelper.GetParent(current);
-    //        }
-    //        while (current != null);
-    //        return null;
-    //    }
 
         private Point GetGridsCellAtCursorsPosition(Rectangle sender) {
             int x = uniformGrid.Children.IndexOf(sender);
@@ -130,14 +126,37 @@ namespace Draughts {
         private bool IfDropPossible(Piece start, Point end) {
             bool ret = false;
             if(start.Type == PieceTypes.Pawn) {
-                if (Math.Abs(start.Row - end.X) <= 1 && Math.Abs(start.Column - end.Y) <= 1)
+                if ((end.X - start.Row == 1 && start.Side == SideTypes.Top || start.Row - end.X == 1 && start.Side == SideTypes.Bottom) && Math.Abs(start.Column - end.Y) == 1)
                     ret = true;
+                else
+                    ret = IfCapture(start, end);
             }
             else if(start.Type == PieceTypes.Dame) {
-                if (Math.Abs(start.Row - end.X) == Math.Abs(start.Column - end.Y))
+                if (Math.Abs(start.Row - end.X) == Math.Abs(start.Column - end.Y) /*&& IfNoMoreThanOnePieceOnTheWay()*/)
                     ret = true;
             }
             return ret;
+        }
+
+        private bool IfCapture(Piece start, Point end) {
+            if (Math.Abs(start.Row - end.X) == 2 && Math.Abs(start.Column - end.Y) == 2) {
+                Point middleCell = new Point(start.Row + (end.X - start.Row) / 2, start.Column + (end.Y - start.Column) / 2);
+                if (Pieces.SingleOrDefault(p => { return p.Row == middleCell.X && p.Column == middleCell.Y && p.Color != start.Color; }) != null)
+                    return true;
+            }
+            return false;
+        }
+
+        private Point PointToCapture(Piece start, Point end) {
+            return new Point(start.Row + (end.X - start.Row) / 2, start.Column + (end.Y - start.Column) / 2);
+        }
+
+        private bool IfOthersideCell(Point cell, Piece piece) {
+            if(piece.Type == PieceTypes.Pawn) {
+                if ((piece.Side == SideTypes.Top && cell.X == Size - 1) || (piece.Side == SideTypes.Bottom && cell.X == 0))
+                    return true;
+            }
+            return false;
         }
     }
 }

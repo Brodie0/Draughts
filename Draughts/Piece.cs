@@ -11,8 +11,9 @@ using System.Windows.Media.Imaging;
 
 namespace Draughts {
     public class Piece : INotifyPropertyChanged {
-        public bool IsBlack { get; set; }
         public PieceTypes Type { get; set; }
+        public SideTypes Side { get; set; }
+        public ColorTypes Color { get; set; }
         private int _row;
         private int _column;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -38,13 +39,23 @@ namespace Draughts {
         }
 
         public string ImageSource {
-            get { return "../Assets/" + (IsBlack ? "black" : "white") + ".png"; }
+            get { return "../Assets/" + (Color == ColorTypes.Black ? "black" : "white") + (Type == PieceTypes.Dame ? "D" : "P") + ".png"; }
         }
     }
 
     public enum PieceTypes {
         Pawn,
         Dame
+    }
+
+    public enum SideTypes {
+        Top,
+        Bottom
+    }
+
+    public enum ColorTypes {
+        Black, 
+        White
     }
 }
 
