@@ -16,6 +16,7 @@ namespace Draughts {
         public ColorTypes Color { get; set; }
         private int _row;
         private int _column;
+        //private Point _coor;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int Row {
@@ -33,6 +34,13 @@ namespace Draughts {
                 OnPropertyChanged("Column");
             }
         }
+
+        //public Point Coor {
+        //    get { return _coor; }
+        //    set { _coor = value;
+        //        OnPropertyChanged("Coor");
+        //    }
+        //}
 
         protected void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
