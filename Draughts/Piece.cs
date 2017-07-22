@@ -14,33 +14,16 @@ namespace Draughts {
         public PieceTypes Type { get; set; }
         public SideTypes Side { get; set; }
         public ColorTypes Color { get; set; }
-        private int _row;
-        private int _column;
-        //private Point _coor;
+        private Point _coor;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int Row {
-            get { return _row; }
+        public Point Coor {
+            get { return _coor; }
             set {
-                _row = value;
-                OnPropertyChanged("Row");
+                _coor = value;
+                OnPropertyChanged("Coor");
             }
         }
-
-        public int Column {
-            get { return _column; }
-            set {
-                _column = value;
-                OnPropertyChanged("Column");
-            }
-        }
-
-        //public Point Coor {
-        //    get { return _coor; }
-        //    set { _coor = value;
-        //        OnPropertyChanged("Coor");
-        //    }
-        //}
 
         protected void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Draughts"
+        xmlns:tools="clr-namespace:Draughts.Tools"
         mc:Ignorable="d"
-        Title="Draughts" Height="500" Width="500"
+        Title="Draughts" 
+        Height="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools:RatioConverter}, ConverterParameter='0.8' }" 
+        Width="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Converter={tools:RatioConverter}, ConverterParameter='0.8' }"
         WindowStartupLocation="CenterScreen">
+    
     <Window.Resources>
         <DataTemplate DataType="{x:Type local:Piece}">
             <Image Source="{Binding ImageSource}"/>
@@ -15,84 +19,84 @@
 
     <Grid>
         <UniformGrid Name ="uniformGrid" Rows="8" Columns="8">
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
 
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
 
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
 
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
 
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
 
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
 
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
 
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
-            <Rectangle Fill="Black" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter" AllowDrop="True"/>
-            <Rectangle Fill="White" Drop="Rectangle_Drop" DragEnter="Rectangle_DragEnter"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
+            <Rectangle Fill="Black" Drop="MyDrop" AllowDrop="True"/>
+            <Rectangle Fill="White" Drop="MyDrop"/>
 
         </UniformGrid>
 
         <ItemsControl ItemsSource="{Binding}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Grid IsItemsHost="True" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseMove="Rectangle_PreviewMouseMove">
+                    <Grid IsItemsHost="True" PreviewMouseLeftButtonDown="Drag">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -118,8 +122,8 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Grid.Row" Value="{Binding Row}"/>
-                    <Setter Property="Grid.Column" Value="{Binding Column}"/>
+                    <Setter Property="Grid.Row" Value="{Binding Coor.X}"/>
+                    <Setter Property="Grid.Column" Value="{Binding Coor.Y}"/>
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>

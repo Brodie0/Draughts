@@ -37,8 +37,7 @@ namespace Draughts {
         private void GeneratePiecesInRows(int start, int end, ColorTypes color, PieceTypes type, SideTypes side) {
             for (int i = start; i < end; i++) {
                 Enumerable.Range(0, Size).Where(j => j % 2 != i % 2).Select(x => new Piece() {
-                    Row = i,
-                    Column = x,
+                    Coor = new Point(i, x),
                     Color = color,
                     Type = type,
                     Side = side
@@ -47,33 +46,18 @@ namespace Draughts {
         }
 
         private Point startPoint;
-        private void Rectangle_PreviewMouseMove(object sender, MouseEventArgs e) {
-            startPoint = e.GetPosition(null);
+        private void Drag(object sender, MouseButtonEventArgs e) {
+            startPoint = GetGridsCellAtCursorsPosition((Grid)sender);
+            Image image = e.OriginalSource as Image;
+            DataObject data = new DataObject(typeof(ImageSource), image.Source);
+            DragDrop.DoDragDrop(image, data, DragDropEffects.All);
         }
 
-        private Point cellToRemove;
-        private void Rectangle_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            Point mousePos = e.GetPosition(null);
-            Vector diff = startPoint - mousePos;
-
-            if (e.LeftButton == MouseButtonState.Pressed
-                //&& (System.Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                //System.Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-                ) {
-                cellToRemove = GetGridsCellAtCursorsPosition((Grid)sender);
-                Image image = e.OriginalSource as Image;
-
-                DataObject data = new DataObject(typeof(ImageSource), image.Source);
-
-                DragDrop.DoDragDrop(image, data, DragDropEffects.All);
-            }
-        }
-
-        private void Rectangle_Drop(object sender, DragEventArgs e) {
+        private void MyDrop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(typeof(ImageSource))) {
                 Point endCellCoor = GetGridsCellAtCursorsPosition((Rectangle)sender);
-                Piece startCell = Pieces.SingleOrDefault(p => { return p.Row == cellToRemove.X && p.Column == cellToRemove.Y; });
-                if(startCell.Type == PieceTypes.Pawn) {
+                Piece startCell = Pieces.SingleOrDefault(p => p.Coor == startPoint);
+                if (startCell.Type == PieceTypes.Pawn) {
                     if (IfOthersideCell(startCell, endCellCoor))
                         startCell.Type = PieceTypes.Dame;
                     if (PawnMoveAllowed(startCell, endCellCoor))
@@ -83,20 +67,14 @@ namespace Draughts {
                         MovePiece(startCell, endCellCoor);
                     }
                 }
-                else if(startCell.Type == PieceTypes.Dame) {
+                else if (startCell.Type == PieceTypes.Dame) {
                     if (DameMoveAllowed(startCell, endCellCoor))
                         MovePiece(startCell, endCellCoor);
                     else if (DameCaptureMoveAllowed(startCell, endCellCoor)) {
-                        //CapturePieceBetween(startCell, endCellCoor);
+                        CapturePieceBetween(startCell, endCellCoor);
                         MovePiece(startCell, endCellCoor);
                     }
                 }
-            }
-        }
-
-        private void Rectangle_DragEnter(object sender, DragEventArgs e) {
-            if (!e.Data.GetDataPresent(typeof(ImageSource)) || sender == e.Source) {
-                e.Effects = DragDropEffects.None;
             }
         }
 
@@ -132,15 +110,15 @@ namespace Draughts {
         }
 
         private bool PawnMoveAllowed(Piece start, Point end) {
-            return ((end.X - start.Row == 1 && start.Side == SideTypes.Top || start.Row - end.X == 1 && start.Side == SideTypes.Bottom) 
-                && Math.Abs(start.Column - end.Y) == 1) ? true : true;
+            return ((end.X - start.Coor.X == 1 && start.Side == SideTypes.Top || start.Coor.X - end.X == 1 && start.Side == SideTypes.Bottom) 
+                && Math.Abs(start.Coor.Y - end.Y) == 1) ? true : false;
         }
 
         private bool PawnCaptureMoveAllowed(Piece start, Point end) {
             if (start.Type == PieceTypes.Pawn) {
-                if (Math.Abs(start.Row - end.X) == 2 && Math.Abs(start.Column - end.Y) == 2) {
-                    Point middleCell = new Point(start.Row + (end.X - start.Row) / 2, start.Column + (end.Y - start.Column) / 2);
-                    if (Pieces.SingleOrDefault(p => { return p.Row == middleCell.X && p.Column == middleCell.Y && p.Color != start.Color; }) != null)
+                if (Math.Abs(start.Coor.X - end.X) == 2 && Math.Abs(start.Coor.Y - end.Y) == 2) {
+                    Point middleCell = new Point(start.Coor.X + (end.X - start.Coor.X) / 2, start.Coor.Y + (end.Y - start.Coor.Y) / 2);
+                    if (Pieces.SingleOrDefault(p => { return p.Coor == middleCell && p.Color != start.Color; }) != null)
                         return true;
                 }
             }
@@ -148,11 +126,11 @@ namespace Draughts {
         }
 
         private bool DameMoveAllowed(Piece start, Point end) {
-            return (Math.Abs(start.Row - end.X) == Math.Abs(start.Column - end.Y) && IfNoMoreThanXPiecesOnTheWay(start, end, 0)) ? true : false;
+            return (Math.Abs(start.Coor.X - end.X) == Math.Abs(start.Coor.Y - end.Y) && IfNoMoreThanXPiecesOnTheWay(start, end, 0)) ? true : false;
         }
 
         private bool DameCaptureMoveAllowed(Piece start, Point end) {
-            return (Math.Abs(start.Row - end.X) == Math.Abs(start.Column - end.Y) && IfNoMoreThanXPiecesOnTheWay(start, end, 1, start.Color)) ? true : false;
+            return (Math.Abs(start.Coor.X - end.X) == Math.Abs(start.Coor.Y - end.Y) && IfNoMoreThanXPiecesOnTheWay(start, end, 1, start.Color)) ? true : false;
         }
 
         private bool IfOthersideCell(Piece src, Point dest) {
@@ -160,32 +138,29 @@ namespace Draughts {
         }
 
         private bool IfNoMoreThanXPiecesOnTheWay(Piece start, Point end, int X, ColorTypes colorOfDame = default(ColorTypes)) {
-            //TODO bez sensu, daj po prostu pole typu Point w Piece
-            List<Point> pairs = GenerateWayPoints(new Point(start.Row, start.Column), end);
-
-            List<Point> pointsOfPieces = Pieces.Select(p => { return new Point(p.Row, p.Column); }).ToList();
-            List<Point> pointsOfDamesColorPieces = Pieces.Select(p => p).Where(p => p.Color == colorOfDame).Select(p => { return new Point(p.Row, p.Column); }).ToList();
-
+            List<Point> pairs = GenerateWayPoints(start.Coor, end);
+            List<Point> pointsOfPieces = Pieces.Select(p => p.Coor).ToList();
+            List<Point> pointsOfDamesColorPieces = Pieces.Select(p => p).Where(p => p.Color == colorOfDame).Select(p => p.Coor).ToList();
             List<Point> pointsOfPiecesOnTheWay = pointsOfPieces.Intersect(pairs).ToList();
-
             return (pointsOfPiecesOnTheWay.Count > X || pointsOfPiecesOnTheWay.Intersect(pointsOfDamesColorPieces).ToList().Count > 0) ? false : true;
         }
 
         private void MovePiece(Piece src, Point dest) {
-            Pieces.Add(new Piece() { Row = (int)dest.X, Column = (int)dest.Y, Color = src.Color, Type = src.Type, Side = src.Side });
+            Pieces.Add(new Piece() { Coor = dest, Color = src.Color, Type = src.Type, Side = src.Side });
             Pieces.Remove(src);
         }
 
         private void CapturePieceBetween(Piece src, Point dest) {
             Point pointToCapture = PointToCapture(src, dest);
-            Piece pieceToCapture = Pieces.SingleOrDefault(p => { return p.Row == pointToCapture.X && p.Column == pointToCapture.Y; });
+            Piece pieceToCapture = Pieces.SingleOrDefault(p => p.Coor == pointToCapture);
             Pieces.Remove(pieceToCapture);
         }
 
         private Point PointToCapture(Piece start, Point end) {
-            List<Point> pairs = GenerateWayPoints()
-            Pieces.
-            return new Point(start.Row + (end.X - start.Row) / 2, start.Column + (end.Y - start.Column) / 2);
+            List<Point> pairs = GenerateWayPoints(start.Coor, end);
+            List<Point> pointsOfPieces = Pieces.Select(p => p.Coor).ToList();
+            List<Point> pointsOfPiecesOnTheWay = pointsOfPieces.Intersect(pairs).ToList();
+            return Pieces.SingleOrDefault(p => p.Coor == pointsOfPiecesOnTheWay.ElementAt(0)).Coor;
         }
 
         private List<Point> GenerateWayPoints(Point src, Point dest) {
