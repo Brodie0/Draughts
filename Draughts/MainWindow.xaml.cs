@@ -16,6 +16,8 @@ namespace Draughts {
 
         private ObservableCollection<Piece> Pieces;
         private const int Size = 8;
+        private delegate void Move(Piece s, Point e);
+        private Point startPoint;
 
         public MainWindow() {
             Pieces = new ObservableCollection<Piece>();
@@ -45,7 +47,6 @@ namespace Draughts {
             }
         }
 
-        private Point startPoint;
         private void Drag(object sender, MouseButtonEventArgs e) {
             startPoint = GetGridsCellAtCursorsPosition((Grid)sender);
             Image image = e.OriginalSource as Image;
@@ -53,28 +54,37 @@ namespace Draughts {
             DragDrop.DoDragDrop(image, data, DragDropEffects.All);
         }
 
+        private void PawnMove(Piece startCell, Point endCellCoor) {
+            if (IfOthersideCell(startCell, endCellCoor))
+                startCell.Type = PieceTypes.Dame;
+            if (PawnMoveAllowed(startCell, endCellCoor))
+                MovePiece(startCell, endCellCoor);
+            else if (PawnCaptureMoveAllowed(startCell, endCellCoor)) {
+                CapturePieceBetween(startCell, endCellCoor);
+                MovePiece(startCell, endCellCoor);
+            }
+        }
+
+        private void DameMove(Piece startCell, Point endCellCoor) {
+            if (DameMoveAllowed(startCell, endCellCoor))
+                MovePiece(startCell, endCellCoor);
+            else if (DameCaptureMoveAllowed(startCell, endCellCoor)) {
+                CapturePieceBetween(startCell, endCellCoor);
+                MovePiece(startCell, endCellCoor);
+            }
+        }
+
         private void MyDrop(object sender, DragEventArgs e) {
             if (e.Data.GetDataPresent(typeof(ImageSource))) {
                 Point endCellCoor = GetGridsCellAtCursorsPosition((Rectangle)sender);
                 Piece startCell = Pieces.SingleOrDefault(p => p.Coor == startPoint);
-                if (startCell.Type == PieceTypes.Pawn) {
-                    if (IfOthersideCell(startCell, endCellCoor))
-                        startCell.Type = PieceTypes.Dame;
-                    if (PawnMoveAllowed(startCell, endCellCoor))
-                        MovePiece(startCell, endCellCoor);
-                    else if (PawnCaptureMoveAllowed(startCell, endCellCoor)) {
-                        CapturePieceBetween(startCell, endCellCoor);
-                        MovePiece(startCell, endCellCoor);
-                    }
-                }
-                else if (startCell.Type == PieceTypes.Dame) {
-                    if (DameMoveAllowed(startCell, endCellCoor))
-                        MovePiece(startCell, endCellCoor);
-                    else if (DameCaptureMoveAllowed(startCell, endCellCoor)) {
-                        CapturePieceBetween(startCell, endCellCoor);
-                        MovePiece(startCell, endCellCoor);
-                    }
-                }
+                Move move = default(Move);
+                if (startCell.Type == PieceTypes.Pawn)
+                    move = PawnMove;
+                else if (startCell.Type == PieceTypes.Dame)
+                    move = DameMove;
+
+                move.Invoke(startCell, endCellCoor);
             }
         }
 
